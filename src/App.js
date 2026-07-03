@@ -152,7 +152,6 @@ function SaveIndicator({ status }) {
 function BracketEntry({ playerName, initialBracket, locked }) {
   const [bracket, setBracket] = useState(()=>initialBracket||defaultBracket());
   const [saveStatus, setSaveStatus] = useState(null);
-  const saveTimer = useState(null);
 
   useEffect(()=>{ setBracket(initialBracket||defaultBracket()); },[initialBracket]);
 
