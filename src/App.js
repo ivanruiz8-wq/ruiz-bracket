@@ -371,7 +371,7 @@ export default function App() {
 
   function confirmName() {
     const trimmed = playerName.trim();
-    if (!trimmed) { setNameErr("Please enter your name."); return; }
+    if (!trimmed) { setNameErr("Please select your name."); return; }
     setPlayerName(trimmed);
     setNameConfirmed(true);
     setNameErr("");
@@ -482,11 +482,15 @@ export default function App() {
               <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:8,padding:28,maxWidth:380,margin:"0 auto"}}>
                 <div style={{fontFamily:"Georgia,serif",fontSize:20,fontWeight:700,color:C.gold,marginBottom:6}}>Who are you?</div>
                 <p style={{fontSize:13,color:C.dim,marginBottom:16}}>
-                  Enter your name and pick your winners — your bracket saves automatically as you click.
+                  Select your name and pick your winners — your bracket saves automatically as you click.
                 </p>
-                <input placeholder="Your name" value={playerName} onChange={e=>setPlayerName(e.target.value)}
-                  onKeyDown={e=>e.key==="Enter"&&confirmName()}
-                  style={{...inputStyle,width:"100%",marginBottom:10}}/>
+                <select value={playerName} onChange={e=>setPlayerName(e.target.value)}
+                  style={{...inputStyle,width:"100%",marginBottom:10,cursor:"pointer"}}>
+                  <option value="">— Select your name —</option>
+                  {FAMILY.map(name=>(
+                    <option key={name} value={name}>{name}</option>
+                  ))}
+                </select>
                 <button onClick={confirmName} style={{width:"100%",background:C.gold,color:"#07111a",border:"none",borderRadius:5,fontWeight:800,fontSize:13,padding:"10px",cursor:"pointer",fontFamily:"inherit"}}>
                   {locked?"View My Bracket":"Start My Bracket"}
                 </button>
