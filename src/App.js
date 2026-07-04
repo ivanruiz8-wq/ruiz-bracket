@@ -23,33 +23,55 @@ const RESULTS = {
   r16:     { 0:"", 1:"", 2:"", 3:"", 4:"", 5:"", 6:"", 7:"" },
   qf:      { 0:"", 1:"", 2:"", 3:"" },
   sf:      { 0:"", 1:"" },
-  final:   { 0:"" },
   champion: "",
 };
 
 // ── R32 MATCHUPS ───────────────────────────────────────────────────────────
+// Order matches official FIFA bracket (M89-M96):
+// R16 R0: Paraguay vs France   (M89) ─┐ QF0 (Boston/M97)  ─┐
+// R16 R1: Canada vs Morocco    (M90) ─┘                     │ SF0 (Dallas)
+// R16 R2: Brazil vs Norway     (M91) ─┐ QF2 (Miami/M99)   ─┘
+// R16 R3: Mexico vs England    (M92) ─┘
+//
+// R16 R4: Portugal vs Spain    (M93) ─┐ QF1 (LA/M98)      ─┐
+// R16 R5: Switzerland vs Colombia(M94)─┘                    │ SF1 (Atlanta)
+// R16 R6: USA vs Belgium       (M95) ─┐ QF3 (KC/M100)     ─┘
+// R16 R7: Argentina vs Egypt   (M96) ─┘
 const R32_MATCHUPS = [
-  { id:"r32_1",  home:"Netherlands",  away:"Morocco",     winner:"Morocco"      },
-  { id:"r32_2",  home:"South Africa", away:"Canada",      winner:"Canada"       },
-  { id:"r32_3",  home:"France",       away:"Sweden",      winner:"France"       },
-  { id:"r32_4",  home:"Germany",      away:"Paraguay",    winner:"Paraguay"     },
-  { id:"r32_5",  home:"Brazil",       away:"Japan",       winner:"Brazil"       },
-  { id:"r32_6",  home:"Ivory Coast",  away:"Norway",      winner:"Norway"       },
-  { id:"r32_7",  home:"Mexico",       away:"Ecuador",     winner:"Mexico"       },
-  { id:"r32_8",  home:"England",      away:"DR Congo",    winner:"England"      },
-  { id:"r32_9",  home:"Portugal",     away:"Croatia",     winner:"Portugal"     },
-  { id:"r32_10", home:"Spain",        away:"Austria",     winner:"Spain"        },
-  { id:"r32_11", home:"USA",          away:"Bosnia",      winner:"USA"          },
-  { id:"r32_12", home:"Belgium",      away:"Senegal",     winner:"Belgium"      },
-  { id:"r32_13", home:"Argentina",    away:"Cape Verde",  winner:"Argentina"    },
-  { id:"r32_14", home:"Australia",    away:"Egypt",       winner:"Egypt"        },
-  { id:"r32_15", home:"Switzerland",  away:"Algeria",     winner:"Switzerland"  },
-  { id:"r32_16", home:"Colombia",     away:"Ghana",       winner:"Colombia"     },
+  { id:"r32_1",  home:"Netherlands",  away:"Morocco",     winner:"Morocco"      }, // → R16 R1
+  { id:"r32_2",  home:"South Africa", away:"Canada",      winner:"Canada"       }, // → R16 R1
+  { id:"r32_3",  home:"France",       away:"Sweden",      winner:"France"       }, // → R16 R0
+  { id:"r32_4",  home:"Germany",      away:"Paraguay",    winner:"Paraguay"     }, // → R16 R0
+  { id:"r32_5",  home:"Brazil",       away:"Japan",       winner:"Brazil"       }, // → R16 R2
+  { id:"r32_6",  home:"Ivory Coast",  away:"Norway",      winner:"Norway"       }, // → R16 R2
+  { id:"r32_7",  home:"Mexico",       away:"Ecuador",     winner:"Mexico"       }, // → R16 R3
+  { id:"r32_8",  home:"England",      away:"DR Congo",    winner:"England"      }, // → R16 R3
+  { id:"r32_9",  home:"Portugal",     away:"Croatia",     winner:"Portugal"     }, // → R16 R4
+  { id:"r32_10", home:"Spain",        away:"Austria",     winner:"Spain"        }, // → R16 R4
+  { id:"r32_11", home:"USA",          away:"Bosnia",      winner:"USA"          }, // → R16 R6
+  { id:"r32_12", home:"Belgium",      away:"Senegal",     winner:"Belgium"      }, // → R16 R6
+  { id:"r32_13", home:"Argentina",    away:"Cape Verde",  winner:"Argentina"    }, // → R16 R7
+  { id:"r32_14", home:"Australia",    away:"Egypt",       winner:"Egypt"        }, // → R16 R7
+  { id:"r32_15", home:"Switzerland",  away:"Algeria",     winner:"Switzerland"  }, // → R16 R5
+  { id:"r32_16", home:"Colombia",     away:"Ghana",       winner:"Colombia"     }, // → R16 R5
 ];
 
-const R16_PAIRS   = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]];
-const QF_PAIRS    = [[0,1],[2,3],[4,5],[6,7]];
-const SF_PAIRS    = [[0,1],[2,3]];
+// R16 matchups fed by R32 pairs (indices into R32_MATCHUPS above)
+// R16[0] = Paraguay vs France    (r32_4 winner vs r32_3 winner)
+// R16[1] = Canada vs Morocco     (r32_2 winner vs r32_1 winner)
+// R16[2] = Brazil vs Norway      (r32_5 winner vs r32_6 winner)
+// R16[3] = Mexico vs England     (r32_7 winner vs r32_8 winner)
+// R16[4] = Portugal vs Spain     (r32_9 winner vs r32_10 winner)
+// R16[5] = Switzerland vs Colombia (r32_15 winner vs r32_16 winner)
+// R16[6] = USA vs Belgium        (r32_11 winner vs r32_12 winner)
+// R16[7] = Argentina vs Egypt    (r32_13 winner vs r32_14 winner)
+const R16_PAIRS = [[3,2],[1,0],[4,5],[6,7],[8,9],[14,15],[10,11],[12,13]];
+
+// QF: M97=R16[0]vsR16[1], M98=R16[4]vsR16[5], M99=R16[2]vsR16[3], M100=R16[6]vsR16[7]
+const QF_PAIRS  = [[0,1],[4,5],[2,3],[6,7]];
+
+// SF: Dallas = QF0(M97) vs QF2(M99), Atlanta = QF1(M98) vs QF3(M100)
+const SF_PAIRS  = [[0,2],[1,3]];
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
 const isLocked = () => new Date() >= LOCK_TIME;
@@ -69,8 +91,8 @@ function calcScore(bracket) {
   for (let i=0;i<8;i++) if (RESULTS.r16[i] && bracket.r16[i]===RESULTS.r16[i]) score+=ROUND_POINTS.r16;
   for (let i=0;i<4;i++) if (RESULTS.qf[i]  && bracket.qf[i] ===RESULTS.qf[i])  score+=ROUND_POINTS.qf;
   for (let i=0;i<2;i++) if (RESULTS.sf[i]  && bracket.sf[i] ===RESULTS.sf[i])  score+=ROUND_POINTS.sf;
-  if (RESULTS.final[0]   && bracket.final[0]  ===RESULTS.final[0])   score+=ROUND_POINTS.final;
-  if (RESULTS.champion   && bracket.champion  ===RESULTS.champion)   score+=ROUND_POINTS.final;
+  // Final: only the champion pick scores (16pts) — picking the finalist who wins = champion pick
+  if (RESULTS.champion && bracket.champion === RESULTS.champion) score+=ROUND_POINTS.final;
   return score;
 }
 
@@ -466,7 +488,7 @@ export default function App() {
               : <Leaderboard allPicks={allPicks}/>
             }
             <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:6,padding:"14px 18px",display:"flex",gap:20,flexWrap:"wrap"}}>
-              {[["#f0c040","2pts · Round of 16"],["#c0c8d8","4pts · Quarterfinal"],["#cd7f45","8pts · Semifinal"],["#1a8cff","16pts · Final & Champion"]].map(([color,label])=>(
+              {[["#f0c040","2pts · Round of 16"],["#c0c8d8","4pts · Quarterfinal"],["#cd7f45","8pts · Semifinal"],["#1a8cff","16pts · Champion"]].map(([color,label])=>(
                 <div key={label} style={{display:"flex",alignItems:"center",gap:7,fontSize:12,color:C.dim}}>
                   <div style={{width:8,height:8,borderRadius:"50%",background:color,flexShrink:0}}/>{label}
                 </div>
