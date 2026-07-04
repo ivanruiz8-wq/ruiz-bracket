@@ -9,7 +9,7 @@ const supabase = createClient(
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
 const ADMIN_PASSWORD = "Youdabest123$!$";
-const LOCK_TIME = new Date("2026-07-04T20:00:00Z");
+const LOCK_TIME = new Date("2026-07-04T22:00:00Z");
 
 const FAMILY = [
   "Ivan Sr","Ivan Jr","Isabella","Alfonso","Edgard",
