@@ -41,10 +41,10 @@ const R32_MATCHUPS = [
   { id:"r32_10", home:"Spain",        away:"Austria",     winner:"Spain"        },
   { id:"r32_11", home:"USA",          away:"Bosnia",      winner:"USA"          },
   { id:"r32_12", home:"Belgium",      away:"Senegal",     winner:"Belgium"      },
-  { id:"r32_13", home:"Argentina",    away:"Cape Verde",  winner:""             },
-  { id:"r32_14", home:"Australia",    away:"Egypt",       winner:""             },
+  { id:"r32_13", home:"Argentina",    away:"Cape Verde",  winner:"Argentina"    },
+  { id:"r32_14", home:"Australia",    away:"Egypt",       winner:"Egypt"        },
   { id:"r32_15", home:"Switzerland",  away:"Algeria",     winner:"Switzerland"  },
-  { id:"r32_16", home:"Colombia",     away:"Ghana",       winner:""             },
+  { id:"r32_16", home:"Colombia",     away:"Ghana",       winner:"Colombia"     },
 ];
 
 const R16_PAIRS   = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]];
