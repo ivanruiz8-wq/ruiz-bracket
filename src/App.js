@@ -421,8 +421,8 @@ export default function App() {
   );
 
   const lockLabel = locked
-    ? "🔒 Brackets locked · July 4 @ 12:59 PM ET"
-    : "⏳ Locks July 4 @ 12:59 PM ET";
+    ? "🔒 Brackets locked · July 4 @ 3:00 PM ET"
+    : "⏳ Locks July 4 @ 3:00 PM ET";
 
   return (
     <div style={{fontFamily:"'Inter','Helvetica Neue',sans-serif",background:C.bg,color:C.white,minHeight:"100vh"}}>
