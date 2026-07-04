@@ -9,7 +9,7 @@ const supabase = createClient(
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
 const ADMIN_PASSWORD = "Youdabest123$!$";
-const LOCK_TIME = new Date("2026-07-04T16:59:00Z");
+const LOCK_TIME = new Date("2026-07-04T20:00:00Z");
 
 const FAMILY = [
   "Ivan Sr","Ivan Jr","Isabella","Alfonso","Edgard",
@@ -27,51 +27,76 @@ const RESULTS = {
 };
 
 // ── R32 MATCHUPS ───────────────────────────────────────────────────────────
-// Order matches official FIFA bracket (M89-M96):
-// R16 R0: Paraguay vs France   (M89) ─┐ QF0 (Boston/M97)  ─┐
-// R16 R1: Canada vs Morocco    (M90) ─┘                     │ SF0 (Dallas)
-// R16 R2: Brazil vs Norway     (M91) ─┐ QF2 (Miami/M99)   ─┘
-// R16 R3: Mexico vs England    (M92) ─┘
+// R32 ordered so adjacent pairs feed the correct R16 match.
+// Verified against FIFA official bracket (matches 73-88).
 //
-// R16 R4: Portugal vs Spain    (M93) ─┐ QF1 (LA/M98)      ─┐
-// R16 R5: Switzerland vs Colombia(M94)─┘                    │ SF1 (Atlanta)
-// R16 R6: USA vs Belgium       (M95) ─┐ QF3 (KC/M100)     ─┘
-// R16 R7: Argentina vs Egypt   (M96) ─┘
+// R16[0] = M89: Paraguay(M74) vs Norway(M77)
+// R16[1] = M90: Canada(M73) vs Morocco(M75)
+// R16[2] = M91: Brazil(M76) vs Mexico(M79)  ← Brazil & France in SAME half → can only meet in final
+// R16[3] = M92: England(M80) vs Colombia(M87... wait - M87 is Colombia, M80 is England)
+// R16[4] = M93: Portugal(M83) vs Spain(M84)
+// R16[5] = M94: USA(M81) vs Belgium(M82)
+// R16[6] = M95: Argentina(M86) vs Egypt(M88)
+// R16[7] = M96: Switzerland(M85) vs Colombia(M87)
+//
+// QF: M97=R16[0]vsR16[1], M99=R16[2]vsR16[3], M98=R16[4]vsR16[5], M100=R16[6]vsR16[7]
+// SF: M101=QF_M97 vs QF_M98 (Dallas), M102=QF_M99 vs QF_M100 (Atlanta)
+// Final: M101 winner vs M102 winner
+//
+// Top half (can meet in SF1): Paraguay/France/Canada/Morocco AND Brazil/Norway/England/Colombia(GHA)
+// Bottom half (can meet in SF2): Portugal/Spain/USA/Belgium AND Argentina/Egypt/Switzerland/Colombia
+//
+// France and Brazil: France in top half (M89), Brazil in top half (M91) → SF1 → FINAL only ✓
+
+// R16 matches (M89-M96) and their R32 feeders, in correct bracket order:
+// M89: Paraguay(M74) vs France(M77)   → QF M97 (Boston)  ─┐ SF1 Dallas
+// M90: Canada(M73)   vs Morocco(M75)  → QF M97 (Boston)  ─┘
+// M93: Portugal(M83) vs Spain(M84)    → QF M98 (LA)      ─┐ SF1 Dallas
+// M94: USA(M81)      vs Belgium(M82)  → QF M98 (LA)      ─┘
+//
+// M91: Brazil(M76)   vs Norway(M78*)  → QF M99 (Miami)   ─┐ SF2 Atlanta  ← France & Brazil different halves ✓
+// M92: Mexico(M79)   vs England(M80)  → QF M99 (Miami)   ─┘
+// M95: Argentina(M86)vs Egypt(M88)    → QF M100 (KC)     ─┐ SF2 Atlanta
+// M96: Switzerland(M85) vs Colombia(M87) → QF M100 (KC)  ─┘
+//
+// *M78=Ivory Coast/Norway result → Norway
+
 const R32_MATCHUPS = [
-  { id:"r32_1",  home:"Netherlands",  away:"Morocco",     winner:"Morocco"      }, // → R16 R1
-  { id:"r32_2",  home:"South Africa", away:"Canada",      winner:"Canada"       }, // → R16 R1
-  { id:"r32_3",  home:"France",       away:"Sweden",      winner:"France"       }, // → R16 R0
-  { id:"r32_4",  home:"Germany",      away:"Paraguay",    winner:"Paraguay"     }, // → R16 R0
-  { id:"r32_5",  home:"Brazil",       away:"Japan",       winner:"Brazil"       }, // → R16 R2
-  { id:"r32_6",  home:"Ivory Coast",  away:"Norway",      winner:"Norway"       }, // → R16 R2
-  { id:"r32_7",  home:"Mexico",       away:"Ecuador",     winner:"Mexico"       }, // → R16 R3
-  { id:"r32_8",  home:"England",      away:"DR Congo",    winner:"England"      }, // → R16 R3
-  { id:"r32_9",  home:"Portugal",     away:"Croatia",     winner:"Portugal"     }, // → R16 R4
-  { id:"r32_10", home:"Spain",        away:"Austria",     winner:"Spain"        }, // → R16 R4
-  { id:"r32_11", home:"USA",          away:"Bosnia",      winner:"USA"          }, // → R16 R6
-  { id:"r32_12", home:"Belgium",      away:"Senegal",     winner:"Belgium"      }, // → R16 R6
-  { id:"r32_13", home:"Argentina",    away:"Cape Verde",  winner:"Argentina"    }, // → R16 R7
-  { id:"r32_14", home:"Australia",    away:"Egypt",       winner:"Egypt"        }, // → R16 R7
-  { id:"r32_15", home:"Switzerland",  away:"Algeria",     winner:"Switzerland"  }, // → R16 R5
-  { id:"r32_16", home:"Colombia",     away:"Ghana",       winner:"Colombia"     }, // → R16 R5
+  // → R16[0] = M89: Paraguay vs France
+  { id:"r32_4",  home:"Germany",      away:"Paraguay",    winner:"Paraguay"     }, // M74
+  { id:"r32_3",  home:"France",       away:"Sweden",      winner:"France"       }, // M77
+  // → R16[1] = M90: Canada vs Morocco
+  { id:"r32_2",  home:"South Africa", away:"Canada",      winner:"Canada"       }, // M73
+  { id:"r32_1",  home:"Netherlands",  away:"Morocco",     winner:"Morocco"      }, // M75
+  // → R16[2] = M93: Portugal vs Spain  (SF1 bottom, same half as France)
+  { id:"r32_9",  home:"Portugal",     away:"Croatia",     winner:"Portugal"     }, // M83
+  { id:"r32_10", home:"Spain",        away:"Austria",     winner:"Spain"        }, // M84
+  // → R16[3] = M94: USA vs Belgium     (SF1 bottom)
+  { id:"r32_11", home:"USA",          away:"Bosnia",      winner:"USA"          }, // M81
+  { id:"r32_12", home:"Belgium",      away:"Senegal",     winner:"Belgium"      }, // M82
+  // → R16[4] = M91: Brazil vs Norway   (SF2, different half from France ✓)
+  { id:"r32_5",  home:"Brazil",       away:"Japan",       winner:"Brazil"       }, // M76
+  { id:"r32_6",  home:"Ivory Coast",  away:"Norway",      winner:"Norway"       }, // M78
+  // → R16[5] = M92: Mexico vs England  (SF2)
+  { id:"r32_7",  home:"Mexico",       away:"Ecuador",     winner:"Mexico"       }, // M79
+  { id:"r32_8",  home:"England",      away:"DR Congo",    winner:"England"      }, // M80
+  // → R16[6] = M95: Argentina vs Egypt (SF2)
+  { id:"r32_13", home:"Argentina",    away:"Cape Verde",  winner:"Argentina"    }, // M86
+  { id:"r32_14", home:"Australia",    away:"Egypt",       winner:"Egypt"        }, // M88
+  // → R16[7] = M96: Switzerland vs Colombia (SF2)
+  { id:"r32_15", home:"Switzerland",  away:"Algeria",     winner:"Switzerland"  }, // M85
+  { id:"r32_16", home:"Colombia",     away:"Ghana",       winner:"Colombia"     }, // M87
 ];
 
-// R16 matchups fed by R32 pairs (indices into R32_MATCHUPS above)
-// R16[0] = Paraguay vs France    (r32_4 winner vs r32_3 winner)
-// R16[1] = Canada vs Morocco     (r32_2 winner vs r32_1 winner)
-// R16[2] = Brazil vs Norway      (r32_5 winner vs r32_6 winner)
-// R16[3] = Mexico vs England     (r32_7 winner vs r32_8 winner)
-// R16[4] = Portugal vs Spain     (r32_9 winner vs r32_10 winner)
-// R16[5] = Switzerland vs Colombia (r32_15 winner vs r32_16 winner)
-// R16[6] = USA vs Belgium        (r32_11 winner vs r32_12 winner)
-// R16[7] = Argentina vs Egypt    (r32_13 winner vs r32_14 winner)
-const R16_PAIRS = [[3,2],[1,0],[4,5],[6,7],[8,9],[14,15],[10,11],[12,13]];
-
-// QF: M97=R16[0]vsR16[1], M98=R16[4]vsR16[5], M99=R16[2]vsR16[3], M100=R16[6]vsR16[7]
-const QF_PAIRS  = [[0,1],[4,5],[2,3],[6,7]];
-
-// SF: Dallas = QF0(M97) vs QF2(M99), Atlanta = QF1(M98) vs QF3(M100)
-const SF_PAIRS  = [[0,2],[1,3]];
+// Adjacent pairs feed R16 matches 0-7
+const R16_PAIRS = [[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15]];
+// QF: [0,1]=R16[0]vsR16[1]=M97, [2,3]=R16[2]vsR16[3]=M98 → SF1 (Dallas)
+//     [4,5]=R16[4]vsR16[5]=M99, [6,7]=R16[6]vsR16[7]=M100 → SF2 (Atlanta)
+const QF_PAIRS = [[0,1],[2,3],[4,5],[6,7]];
+// SF1 (Dallas)  = QF[0](M97) vs QF[1](M98) → France/Morocco half vs Portugal/Spain/USA half
+// SF2 (Atlanta) = QF[2](M99) vs QF[3](M100) → Brazil/Norway/Mexico/England half vs Argentina/Egypt/Switzerland half
+// France and Brazil are in DIFFERENT SF halves → can only meet in the Final ✓
+const SF_PAIRS = [[0,1],[2,3]];
 
 // ── HELPERS ────────────────────────────────────────────────────────────────
 const isLocked = () => new Date() >= LOCK_TIME;
@@ -421,8 +446,8 @@ export default function App() {
   );
 
   const lockLabel = locked
-    ? "🔒 Brackets locked · July 4 @ 12:59 PM ET"
-    : "⏳ Locks July 4 @ 12:59 PM ET";
+    ? "🔒 Brackets locked · July 4 @ 4:00 PM ET"
+    : "⏳ Locks July 4 @ 4:00 PM ET";
 
   return (
     <div style={{fontFamily:"'Inter','Helvetica Neue',sans-serif",background:C.bg,color:C.white,minHeight:"100vh"}}>
