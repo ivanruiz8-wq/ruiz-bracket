@@ -9,7 +9,7 @@ const supabase = createClient(
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
 const ADMIN_PASSWORD = "Youdabest123$!$";
-const LOCK_TIME = new Date("2026-07-04T20:00:00Z");
+const LOCK_TIME = new Date("2026-07-04T16:59:00Z");
 
 const FAMILY = [
   "Ivan Sr","Ivan Jr","Isabella","Alfonso","Edgard",
@@ -446,8 +446,8 @@ export default function App() {
   );
 
   const lockLabel = locked
-    ? "🔒 Brackets locked · July 4 @ 4:00 PM ET"
-    : "⏳ Locks July 4 @ 4:00 PM ET";
+    ? "🔒 Brackets locked · July 4 @ 12:59 PM ET"
+    : "⏳ Locks July 4 @ 12:59 PM ET";
 
   return (
     <div style={{fontFamily:"'Inter','Helvetica Neue',sans-serif",background:C.bg,color:C.white,minHeight:"100vh"}}>
