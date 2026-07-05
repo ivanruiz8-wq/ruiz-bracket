@@ -9,7 +9,7 @@ const supabase = createClient(
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
 const ADMIN_PASSWORD = "Youdabest123$!$";
-const LOCK_TIME = new Date("2026-07-04T22:00:00Z");
+const LOCK_TIME = new Date("2026-07-05T20:00:00Z");
 
 const FAMILY = [
   "Ivan Sr","Ivan Jr","Isabella","Alfonso","Edgard",
@@ -20,7 +20,7 @@ const ROUND_POINTS = { r16: 2, qf: 4, sf: 8, final: 16 };
 
 // ── ACTUAL RESULTS (update & push to redeploy) ─────────────────────────────
 const RESULTS = {
-  r16:     { 0:"", 1:"Morocco", 2:"", 3:"", 4:"", 5:"", 6:"", 7:"" },
+  r16:     { 0:"France", 1:"Morocco", 2:"", 3:"", 4:"", 5:"", 6:"", 7:"" },
   qf:      { 0:"", 1:"", 2:"", 3:"" },
   sf:      { 0:"", 1:"" },
   champion: "",
