@@ -257,12 +257,12 @@ function BracketEntry({ playerName, initialBracket, locked }) {
         </div>
       </div>
 
-      /*<RoundSection title="Round of 32" pts={null}
-        matchups={R32_MATCHUPS.map(m=>({home:m.home,away:m.away}))}
-        picks={R32_MATCHUPS.map(m=>bracket.r32[m.id]||"")}
-        onPick={(i,v)=>{ if(!R32_MATCHUPS[i].winner) pick(n=>{ n.r32[R32_MATCHUPS[i].id]=v; }); }}
-        locked={locked}
-        actual={R32_MATCHUPS.map(m=>m.winner||null)}/> */
+      //<RoundSection title="Round of 32" pts={null}
+        //matchups={R32_MATCHUPS.map(m=>({home:m.home,away:m.away}))}
+        //picks={R32_MATCHUPS.map(m=>bracket.r32[m.id]||"")}
+        //onPick={(i,v)=>{ if(!R32_MATCHUPS[i].winner) pick(n=>{ n.r32[R32_MATCHUPS[i].id]=v; }); }}
+        //locked={locked}
+        //actual={R32_MATCHUPS.map(m=>m.winner||null)}/>
 
       <RoundSection title="Round of 16" pts={2}
         matchups={r16Matchups}
@@ -463,7 +463,7 @@ export default function App() {
           <h1 style={{fontFamily:"Georgia,serif",fontSize:"clamp(34px,8vw,72px)",lineHeight:0.93,fontWeight:700,margin:0}}>
             Knockout <span style={{color:C.gold}}>Bracket</span>
           </h1>
-          <p style={{marginTop:10,fontSize:12,color:C.dim}}>Round of 32 → Champion · 10 Competitors · Scoring from R16 onwards</p>
+          <p style={{marginTop:10,fontSize:12,color:C.dim}}>Round of 16 → Champion · 10 Competitors · Scoring from R16 onwards</p>
           <div style={{marginTop:12,display:"inline-flex",alignItems:"center",gap:6,fontSize:11,
             color:locked?"#e05252":C.dim,background:"rgba(255,255,255,0.03)",
             border:`1px solid ${locked?"rgba(224,82,82,0.3)":C.border}`,borderRadius:4,padding:"4px 12px"}}>
