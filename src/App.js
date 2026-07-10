@@ -20,8 +20,8 @@ const ROUND_POINTS = { r16: 2, qf: 4, sf: 8, final: 16 };
 
 // ── ACTUAL RESULTS (update & push to redeploy) ─────────────────────────────
 const RESULTS = {
-  r16:     { 0:"France", 1:"Morocco", 2:"", 3:"", 4:"Norway", 5:"", 6:"", 7:"" },
-  qf:      { 0:"", 1:"", 2:"", 3:"" },
+  r16:     { 0:"France", 1:"Morocco", 2:"Spain", 3:"Belgium", 4:"Norway", 5:"England", 6:"Argentina", 7:"Switzerland" },
+  qf:      { 0:"France", 1:"", 2:"", 3:"" },
   sf:      { 0:"", 1:"" },
   champion: "",
 };
