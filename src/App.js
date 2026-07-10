@@ -257,12 +257,12 @@ function BracketEntry({ playerName, initialBracket, locked }) {
         </div>
       </div>
 
-      <RoundSection title="Round of 32" pts={null}
+      /*<RoundSection title="Round of 32" pts={null}
         matchups={R32_MATCHUPS.map(m=>({home:m.home,away:m.away}))}
         picks={R32_MATCHUPS.map(m=>bracket.r32[m.id]||"")}
         onPick={(i,v)=>{ if(!R32_MATCHUPS[i].winner) pick(n=>{ n.r32[R32_MATCHUPS[i].id]=v; }); }}
         locked={locked}
-        actual={R32_MATCHUPS.map(m=>m.winner||null)}/>
+        actual={R32_MATCHUPS.map(m=>m.winner||null)}/> */
 
       <RoundSection title="Round of 16" pts={2}
         matchups={r16Matchups}
