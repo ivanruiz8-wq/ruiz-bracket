@@ -23,7 +23,7 @@ const RESULTS = {
   r16:     { 0:"France", 1:"Morocco", 2:"Spain", 3:"Belgium", 4:"Norway", 5:"England", 6:"Argentina", 7:"Switzerland" },
   qf:      { 0:"France", 1:"Spain", 2:"England", 3:"Argentina" },
   sf:      { 0:"Spain", 1:"Argentina" },
-  champion: "",
+  champion: "Spain",
 };
 
 // ── R32 MATCHUPS ───────────────────────────────────────────────────────────
